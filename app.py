@@ -14,7 +14,6 @@ TOKEN = os.getenv('TELEGRAM_TOKEN')
 OPENAI_KEY = os.getenv('OPENAI_API_KEY')
 TELEGRAM_URL = f'https://api.telegram.org/bot{TOKEN}'
 
-# ── Arranque: verificar variables ──────────────────────────
 print(f"[BOOT] TOKEN cargado: {'SI' if TOKEN else 'NO'}")
 print(f"[BOOT] OPENAI_KEY cargada: {'SI' if OPENAI_KEY else 'NO'}")
 print(f"[BOOT] TELEGRAM_URL: {TELEGRAM_URL[:40]}...")
@@ -30,10 +29,20 @@ def send_message(chat_id, text):
 def extract_gasto(texto):
     hoy = datetime.now().strftime('%Y-%m-%d')
     print(f"[OPENAI] Extrayendo gasto de: {texto}")
+
     prompt = f"""Extrae el gasto del siguiente texto.
-Devuelve SOLO un objeto JSON con: fecha (YYYY-MM-DD, hoy es {hoy} si no se menciona),
-monto (número), concepto (texto corto),
-categoria (comida, transporte, entretenimiento, salud, hogar, ropa, educacion, otro).
+Devuelve SOLO un objeto JSON con estas claves:
+- fecha: YYYY-MM-DD (hoy es {hoy} si no se menciona)
+- monto: número sin símbolos
+- concepto: texto corto描述del gasto
+- categoria: una de estas opciones exactas: cafe, pan, comida, transporte, entretenimiento, salud, hogar, ropa, educacion, otro
+  * Usa 'cafe' si el gasto es café, capuchino, latte, americano, espresso o similar
+  * Usa 'pan' si el gasto es pan, panadería, croissant, baguette o similar
+  * Para todo lo demás relacionado con comida usa 'comida'
+- banco: la fuente de fondos mencionada. Si no se menciona usa 'efectivo'. 
+  Ejemplos: 'cash', 'chash', 'efectivo' → 'efectivo'; 'nu', 'nubank' → 'Nu'; 
+  'revolut' → 'Revolut'; 'bbva' → 'BBVA'; 'credito' → 'crédito'
+
 Texto: {texto}"""
 
     res = requests.post(
@@ -43,7 +52,7 @@ Texto: {texto}"""
             'model': 'gpt-4o-mini',
             'max_tokens': 200,
             'messages': [
-                {'role': 'system', 'content': 'Devuelve SOLO JSON, sin markdown ni backticks.'},
+                {'role': 'system', 'content': 'Devuelve SOLO JSON válido, sin markdown ni backticks.'},
                 {'role': 'user', 'content': prompt}
             ]
         }
@@ -65,13 +74,13 @@ def calcular_resumen(comando):
         filtradas = [f for f in filas if f.get('fecha') == hoy]
         etiqueta = 'Hoy'
     elif comando == '/semanal':
-        filtradas = [f for f in filas if datetime.strptime(f.get('fecha','2000-01-01'), '%Y-%m-%d') >= hace7]
+        filtradas = [f for f in filas if datetime.strptime(f.get('fecha', '2000-01-01'), '%Y-%m-%d') >= hace7]
         etiqueta = 'Últimos 7 días'
     elif comando == '/mensual':
-        filtradas = [f for f in filas if f.get('fecha','')[:7] == ahora.strftime('%Y-%m')]
+        filtradas = [f for f in filas if f.get('fecha', '')[:7] == ahora.strftime('%Y-%m')]
         etiqueta = 'Este mes'
     elif comando == '/anual':
-        filtradas = [f for f in filas if f.get('fecha','')[:4] == str(ahora.year)]
+        filtradas = [f for f in filas if f.get('fecha', '')[:4] == str(ahora.year)]
         etiqueta = f'Año {ahora.year}'
     else:
         return None
@@ -82,7 +91,75 @@ def calcular_resumen(comando):
     print(f"[RESUMEN] Resultado: {resultado}")
     return resultado
 
-# ── Ruta fija en lugar de dinámica con TOKEN ───────────────
+def consulta_categoria(texto):
+    """Detecta preguntas sobre categorías específicas y calcula el total"""
+    hoy = datetime.now()
+    texto_lower = texto.lower()
+
+    # Detectar periodo
+    if 'hoy' in texto_lower:
+        periodo = 'hoy'
+        etiqueta_periodo = 'hoy'
+    elif 'semana' in texto_lower:
+        periodo = 'semana'
+        etiqueta_periodo = 'esta semana'
+    elif 'año' in texto_lower or 'anual' in texto_lower:
+        periodo = 'anual'
+        etiqueta_periodo = f'este año'
+    else:
+        periodo = 'mes'
+        etiqueta_periodo = 'este mes'
+
+    # Detectar categoría mencionada
+    categorias_map = {
+        'cafe': ['café', 'cafe'],
+        'pan': ['pan', 'panadería', 'panaderia'],
+        'comida': ['comida', 'comer', 'restaurante', 'food'],
+        'transporte': ['transporte', 'uber', 'taxi', 'gasolina'],
+        'entretenimiento': ['entretenimiento', 'ocio', 'diversión', 'diversion'],
+        'salud': ['salud', 'médico', 'medico', 'farmacia'],
+        'hogar': ['hogar', 'casa', 'renta'],
+        'ropa': ['ropa', 'ropa', 'vestimenta'],
+        'educacion': ['educacion', 'educación', 'curso', 'clase'],
+        'otro': ['otro']
+    }
+
+    categoria_detectada = None
+    for cat, palabras in categorias_map.items():
+        if any(p in texto_lower for p in palabras):
+            categoria_detectada = cat
+            break
+
+    if not categoria_detectada:
+        return None
+
+    filas = get_all_rows()
+
+    # Filtrar por periodo
+    if periodo == 'hoy':
+        filas = [f for f in filas if f.get('fecha') == hoy.strftime('%Y-%m-%d')]
+    elif periodo == 'semana':
+        hace7 = hoy - timedelta(days=7)
+        filas = [f for f in filas if datetime.strptime(f.get('fecha', '2000-01-01'), '%Y-%m-%d') >= hace7]
+    elif periodo == 'mes':
+        filas = [f for f in filas if f.get('fecha', '')[:7] == hoy.strftime('%Y-%m')]
+    elif periodo == 'anual':
+        filas = [f for f in filas if f.get('fecha', '')[:4] == str(hoy.year)]
+
+    # Filtrar por categoría
+    filtradas = [f for f in filas if f.get('categoria', '').lower() == categoria_detectada]
+    total = sum(float(f.get('monto', 0)) for f in filtradas)
+    count = len(filtradas)
+
+    return f'{categoria_detectada.capitalize()} {etiqueta_periodo}: ${total:,.0f} ({count} gastos)'
+
+COMANDOS = ['/diario', '/semanal', '/mensual', '/anual']
+
+PALABRAS_CONSULTA = [
+    'cuánto', 'cuanto', 'cuál', 'cual', 'gastado', 'gasté',
+    'gaste', 'total', 'suma', 'resumen'
+]
+
 @app.route('/webhook', methods=['POST'])
 def webhook():
     print(f"[WEBHOOK] Request recibido")
@@ -98,17 +175,36 @@ def webhook():
             print("[WEBHOOK] Sin texto o chat_id, ignorando")
             return 'ok'
 
-        if texto in ['/diario', '/semanal', '/mensual', '/anual']:
+        # Comandos de resumen
+        if texto in COMANDOS:
             resumen = calcular_resumen(texto)
             send_message(chat_id, resumen)
             return 'ok'
 
+        # Consultas por categoría en lenguaje natural
+        texto_lower = texto.lower()
+        if any(p in texto_lower for p in PALABRAS_CONSULTA):
+            resultado = consulta_categoria(texto)
+            if resultado:
+                send_message(chat_id, resultado)
+                return 'ok'
+
+        # Captura de gasto
         try:
             gasto = extract_gasto(texto)
-            append_row(gasto['fecha'], gasto['monto'], gasto['concepto'], gasto['categoria'])
+            append_row(
+                gasto['fecha'],
+                gasto['monto'],
+                gasto['concepto'],
+                gasto['categoria'],
+                gasto.get('banco', 'efectivo')
+            )
             send_message(chat_id,
-                f"Guardado ✓\n{gasto['concepto']} — ${gasto['monto']}\n"
-                f"Categoría: {gasto['categoria']}\nFecha: {gasto['fecha']}"
+                f"Guardado ✓\n"
+                f"{gasto['concepto']} — ${gasto['monto']}\n"
+                f"Categoría: {gasto['categoria']}\n"
+                f"Banco: {gasto.get('banco', 'efectivo')}\n"
+                f"Fecha: {gasto['fecha']}"
             )
         except Exception as e:
             print(f"[ERROR] Extracción fallida: {e}")
