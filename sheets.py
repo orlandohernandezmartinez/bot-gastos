@@ -14,20 +14,20 @@ def get_service():
     )
     return build('sheets', 'v4', credentials=creds)
 
-def append_row(fecha, monto, concepto, categoria):
+def append_row(fecha, monto, concepto, categoria, banco):
     service = get_service()
     service.spreadsheets().values().append(
         spreadsheetId=SHEET_ID,
-        range='Hoja1!A:D',
+        range='Hoja1!A:E',
         valueInputOption='RAW',
-        body={'values': [[fecha, monto, concepto, categoria]]}
+        body={'values': [[fecha, monto, concepto, categoria, banco]]}
     ).execute()
 
 def get_all_rows():
     service = get_service()
     result = service.spreadsheets().values().get(
         spreadsheetId=SHEET_ID,
-        range='Hoja1!A:D'
+        range='Hoja1!A:E'
     ).execute()
     rows = result.get('values', [])
     if len(rows) < 2:
