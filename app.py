@@ -35,11 +35,23 @@ Devuelve SOLO un objeto JSON con estas claves:
 - fecha: YYYY-MM-DD (hoy es {hoy} si no se menciona)
 - monto: número sin símbolos
 - concepto: texto corto描述del gasto
-- categoria: una de estas opciones exactas: cafe, pan, comida, transporte, entretenimiento, salud, hogar, ropa, educacion, otro
-  * Usa 'cafe' si el gasto es café, capuchino, latte, americano, espresso o similar
-  * Usa 'pan' si el gasto es pan, panadería, croissant, baguette o similar
-  * Para todo lo demás relacionado con comida usa 'comida'
+- categoria: una de estas opciones exactas:
+  * 'cafe' → café, capuchino, latte, americano, espresso, flat white, coffee
+  * 'pan' → pan, panadería, croissant, baguette, dona, krispy kreme
+  * 'comida' → restaurantes, tacos, super, aguacates, comida en general
+  * 'bebida' → drinks, cervezas, chelas, cocteles, martini, negroni, mezcal, mezcales, agua, suero, electrolit, cocktail
+  * 'transporte' → uber, taxi, gasolina, vuelos, metro
+  * 'entretenimiento' → cine, netflix, spotify, conciertos, fiestas, eventos
+  * 'salud' → médico, farmacia, doctor, gym
+  * 'hogar' → renta, luz, agua, internet, muebles
+  * 'ropa' → ropa, zapatos, tenis, accesorios
+  * 'hormiga' → oxxo, seven eleven, chatarra, snacks
+  * 'educacion' → cursos, libros, clases
+  * 'trabajo' → claude, chatgpt, google workspace, software, suscripciones de trabajo
+  * 'credito' → pago de tarjeta de crédito, liquidación de deuda
+  * 'otro' → cualquier cosa que no encaje arriba
 - banco: la fuente de fondos mencionada. Si no se menciona usa 'efectivo'. 
+ * Si se menciona explícitamente úsalo: 'Amex', 'Revolut', 'Nu', 'Stori', 'BBVA'
   Ejemplos: 'cash', 'chash', 'efectivo' → 'efectivo'; 'nu', 'nubank' → 'Nu'; 
   'revolut' → 'Revolut'; 'bbva' → 'BBVA'; 'credito' → 'crédito'
 
