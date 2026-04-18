@@ -168,11 +168,93 @@ def consulta_categoria(texto):
 
     return f'{categoria_detectada.capitalize()} {etiqueta_periodo}: ${total:,.0f} ({count} gastos)'
 
+# Cuentas conocidas para detectar en consultas
+CUENTAS_CONOCIDAS = [
+    'revolut', 'nu', 'amex', 'stori', 'bbva', 'efectivo', 'cash'
+]
+
+def consulta_banco(texto):
+    texto_norm = normalizar(texto)
+    
+    # Detectar qué cuenta menciona
+    cuenta_detectada = None
+    for cuenta in CUENTAS_CONOCIDAS:
+        if cuenta in texto_norm:
+            cuenta_detectada = cuenta
+            break
+    
+    if not cuenta_detectada:
+        return None
+
+    # Detectar si es consulta de deuda
+    es_deuda = any(p in texto_norm for p in ['debo', 'deuda', 'deber', 'credito', 'crédito', 'adeudo'])
+
+    # Detectar periodo — default mes si no se especifica
+    hoy = datetime.now()
+    if 'hoy' in texto_norm:
+        periodo = 'hoy'
+        etiqueta_periodo = 'hoy'
+    elif 'semana' in texto_norm:
+        periodo = 'semana'
+        etiqueta_periodo = 'esta semana'
+    elif 'ano' in texto_norm or 'anual' in texto_norm:
+        periodo = 'anual'
+        etiqueta_periodo = f'este año'
+    else:
+        # Default: mes actual
+        periodo = 'mes'
+        etiqueta_periodo = 'este mes'
+
+    filas = get_all_rows()
+
+    # Filtrar por periodo
+    if periodo == 'hoy':
+        filas_periodo = [f for f in filas if f.get('fecha') == hoy.strftime('%Y-%m-%d')]
+    elif periodo == 'semana':
+        hace7 = hoy - timedelta(days=7)
+        filas_periodo = [f for f in filas if datetime.strptime(f.get('fecha', '2000-01-01'), '%Y-%m-%d') >= hace7]
+    elif periodo == 'mes':
+        filas_periodo = [f for f in filas if f.get('fecha', '')[:7] == hoy.strftime('%Y-%m')]
+    elif periodo == 'anual':
+        filas_periodo = [f for f in filas if f.get('fecha', '')[:4] == str(hoy.year)]
+
+    if es_deuda:
+        # Deuda = gastos con esa cuenta - pagos a esa cuenta (categoria credito)
+        # Busca en TODO el historial, no solo el periodo
+        gastos_cuenta = [
+            f for f in filas
+            if normalizar(f.get('cuenta', '')) == cuenta_detectada
+            and normalizar(f.get('categoria', '')) != 'credito'
+        ]
+        pagos_cuenta = [
+            f for f in filas
+            if normalizar(f.get('categoria', '')) == 'credito'
+            and cuenta_detectada in normalizar(f.get('concepto', ''))
+        ]
+        total_gastos = sum(float(f.get('monto', 0)) for f in gastos_cuenta)
+        total_pagos = sum(float(f.get('monto', 0)) for f in pagos_cuenta)
+        saldo = total_gastos - total_pagos
+
+        detalle = f"Gastos con {cuenta_detectada.capitalize()}: ${total_gastos:,.0f}\n"
+        detalle += f"Pagos realizados: ${total_pagos:,.0f}\n"
+        detalle += f"Saldo estimado: ${saldo:,.0f}"
+        return detalle
+    else:
+        # Gasto con esa cuenta en el periodo
+        filtradas = [
+            f for f in filas_periodo
+            if normalizar(f.get('cuenta', '')) == cuenta_detectada
+        ]
+        total = sum(float(f.get('monto', 0)) for f in filtradas)
+        count = len(filtradas)
+        return f'{cuenta_detectada.capitalize()} {etiqueta_periodo}: ${total:,.0f} ({count} gastos)'
+
 COMANDOS = ['/diario', '/semanal', '/mensual', '/anual']
 
 PALABRAS_CONSULTA = [
-    'cuánto', 'cuanto', 'cuál', 'cual', 'gastado', 'gasté',
-    'gaste', 'total', 'suma', 'resumen'
+    'cuanto', 'cual', 'gastado', 'gaste',
+    'total', 'suma', 'resumen', 'llevo', 'he gastado',
+    'debo', 'deuda', 'adeudo'
 ]
 
 @app.route('/webhook', methods=['POST'])
