@@ -112,9 +112,10 @@ def consulta_categoria(texto):
 
     # Detectar categoría mencionada
     categorias_map = {
-        'cafe': ['café', 'cafe'],
-        'pan': ['pan', 'panadería', 'panaderia'],
+        'cafe': ['café', 'cafe', 'coffee', 'flatwhite'],
+        'pan': ['pan', 'panadería', 'panaderia', 'dona', 'donas', 'krispy'],
         'comida': ['comida', 'comer', 'restaurante', 'food'],
+        'bebida': ['drinks', 'chelas', 'cervezas', 'cocteles', 'coctel', 'cocktail', 'martini', 'negroni', 'mezcal', 'mezcales', 'agua', 'suero', 'electrolit'],
         'transporte': ['transporte', 'uber', 'taxi', 'gasolina'],
         'entretenimiento': ['entretenimiento', 'ocio', 'diversión', 'diversion'],
         'salud': ['salud', 'médico', 'medico', 'farmacia'],
@@ -122,7 +123,7 @@ def consulta_categoria(texto):
         'ropa': ['ropa', 'ropa', 'vestimenta'],
         'hormiga': ['oxxo', 'seven', 'chatarra'],
         'educacion': ['educacion', 'educación', 'curso', 'clase'],
-        'trabajo': ['claude', 'chatgpt', 'chat', 'gpt'],
+        'trabajo': ['claude', 'chatgpt', 'chat', 'gpt', 'google'],
         'otro': ['otro']
     }
 
