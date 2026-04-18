@@ -278,13 +278,17 @@ def webhook():
             send_message(chat_id, resumen)
             return 'ok'
 
-        # Consultas por categoría en lenguaje natural
-        texto_lower = texto.lower()
-        if any(p in texto_lower for p in PALABRAS_CONSULTA):
-            resultado = consulta_categoria(texto)
-            if resultado:
-                send_message(chat_id, resultado)
-                return 'ok'
+        # Consultas en lenguaje natural
+texto_norm = normalizar(texto)
+if any(p in texto_norm for p in PALABRAS_CONSULTA):
+    # Primero intenta detectar si es consulta por banco/cuenta
+    resultado = consulta_banco(texto)
+    if not resultado:
+        # Si no, intenta por categoría
+        resultado = consulta_categoria(texto)
+    if resultado:
+        send_message(chat_id, resultado)
+        return 'ok'
 
         # Captura de gasto
         try:
