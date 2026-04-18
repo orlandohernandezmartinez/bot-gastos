@@ -6,6 +6,14 @@ from flask import Flask, request
 from dotenv import load_dotenv
 from sheets import append_row, get_all_rows
 
+import unicodedata
+
+def normalizar(texto):
+    texto = texto.lower().strip()
+    texto = unicodedata.normalize('NFD', texto)
+    texto = ''.join(c for c in texto if unicodedata.category(c) != 'Mn')
+    return texto
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -106,7 +114,7 @@ def calcular_resumen(comando):
 def consulta_categoria(texto):
     """Detecta preguntas sobre categorías específicas y calcula el total"""
     hoy = datetime.now()
-    texto_lower = texto.lower()
+    texto_lower = normalizar(texto)  
 
     # Detectar periodo
     if 'hoy' in texto_lower:
