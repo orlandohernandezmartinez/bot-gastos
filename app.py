@@ -122,7 +122,7 @@ def consulta_categoria(texto):
         'ropa': ['ropa', 'ropa', 'vestimenta'],
         'hormiga': ['oxxo', 'seven', 'chatarra'],
         'educacion': ['educacion', 'educación', 'curso', 'clase'],
-        'trabajo': ['claude', 'chatgpt', 'chat', 'gpt'].
+        'trabajo': ['claude', 'chatgpt', 'chat', 'gpt'],
         'otro': ['otro']
     }
 
