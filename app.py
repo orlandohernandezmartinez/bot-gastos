@@ -120,7 +120,9 @@ def consulta_categoria(texto):
         'salud': ['salud', 'médico', 'medico', 'farmacia'],
         'hogar': ['hogar', 'casa', 'renta'],
         'ropa': ['ropa', 'ropa', 'vestimenta'],
+        'hormiga': ['oxxo', 'seven', 'chatarra'],
         'educacion': ['educacion', 'educación', 'curso', 'clase'],
+        'trabajo': ['claude', 'chatgpt', 'chat', 'gpt'].
         'otro': ['otro']
     }
 
