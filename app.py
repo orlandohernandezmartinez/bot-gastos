@@ -231,7 +231,7 @@ def consulta_banco(texto):
         # Busca en TODO el historial, no solo el periodo
         gastos_cuenta = [
             f for f in filas
-            if normalizar(f.get('cuenta', '')) == cuenta_detectada
+            if normalizar(f.get('banco', '')) == cuenta_detectada
             and normalizar(f.get('categoria', '')) != 'credito'
         ]
         pagos_cuenta = [
@@ -251,7 +251,7 @@ def consulta_banco(texto):
         # Gasto con esa cuenta en el periodo
         filtradas = [
             f for f in filas_periodo
-            if normalizar(f.get('cuenta', '')) == cuenta_detectada
+            if normalizar(f.get('banco', '')) == cuenta_detectada
         ]
         total = sum(float(f.get('monto', 0)) for f in filtradas)
         count = len(filtradas)
