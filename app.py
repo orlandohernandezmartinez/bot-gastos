@@ -309,7 +309,8 @@ def webhook():
                 gasto['monto'],
                 gasto['concepto'],
                 gasto['categoria'],
-                gasto.get('banco', 'efectivo')
+                gasto.get('banco', 'efectivo'),
+                gasto.get('tag', '')
             )
             send_message(chat_id,
                 f"Guardado ✓\n"
