@@ -60,8 +60,10 @@ Devuelve SOLO un objeto JSON con estas claves:
   * 'ropa' → ropa, zapatos, tenis, accesorios
   * 'hormiga' → oxxo, seven eleven, chatarra, snacks
   * 'educacion' → cursos, libros, clases
-  * 'trabajo' → claude, chatgpt, google workspace, software, suscripciones de trabajo
+  * 'trabajo' → claude, chatgpt, google workspace, software, celular, telcel, suscripciones de trabajo
   * 'credito' → pago de tarjeta de crédito, liquidación de deuda
+  * 'gustito' → gastos personales de placer: perfume, revelado de rollo, caprichos
+  * 'servicios' → lavandería, servicios domésticos, luz, agua, gas, internet
   * 'otro' → cualquier cosa que no encaje arriba
 - banco: la fuente de fondos mencionada. Si no se menciona usa 'efectivo'. 
  * Si se menciona explícitamente úsalo: 'Amex', 'Revolut', 'Nu', 'Stori', 'BBVA'
