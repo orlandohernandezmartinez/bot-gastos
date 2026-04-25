@@ -42,7 +42,12 @@ def extract_gasto(texto):
 Devuelve SOLO un objeto JSON con estas claves:
 - fecha: YYYY-MM-DD (hoy es {hoy} si no se menciona)
 - monto: número sin símbolos
-- concepto: texto corto描述del gasto
+- concepto: copia EXACTAMENTE el texto del gasto tal como fue escrito, sin resumir ni modificar. 
+  Excluye solo la fecha, el monto y el banco si están mencionados.
+  Ejemplos: 
+  "110 comida con melisa en la once mil" → "comida con melisa en la once mil"
+  "230 drinks listening party amex" → "drinks listening party"
+  "16/04/2026 77 pan green rhyno revolut" → "pan green rhyno"
 - categoria: una de estas opciones exactas:
   * 'cafe' → café, capuchino, latte, americano, espresso, flat white, coffee
   * 'pan' → pan, panadería, croissant, baguette, dona, krispy kreme
