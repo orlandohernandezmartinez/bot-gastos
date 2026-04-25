@@ -264,6 +264,39 @@ def consulta_banco(texto):
         count = len(filtradas)
         return f'{cuenta_detectada.capitalize()} {etiqueta_periodo}: ${total:,.0f} ({count} gastos)'
 
+def consulta_tag(texto):
+    texto_norm = normalizar(texto)
+    
+    # Detectar si pregunta por un tag
+    palabras_trigger = ['viaje', 'trip', 'evento', 'gaste en', 'gastado en']
+    if not any(p in texto_norm for p in PALABRAS_CONSULTA):
+        return None
+
+    filas = get_all_rows()
+    
+    # Buscar qué tag menciona — tomar las últimas palabras del texto
+    # Estrategia: buscar en todos los tags del sheet cuál matchea mejor
+    tags_en_sheet = set()
+    for f in filas:
+        t = normalizar(f.get('tag', ''))
+        if t:
+            tags_en_sheet.add(t)
+    
+    tag_detectado = None
+    for tag in tags_en_sheet:
+        if tag in texto_norm:
+            tag_detectado = tag
+            break
+    
+    if not tag_detectado:
+        return None
+    
+    filtradas = [f for f in filas if normalizar(f.get('tag', '')) == tag_detectado]
+    total = sum(float(f.get('monto', 0)) for f in filtradas)
+    count = len(filtradas)
+    
+    return f'Tag "{tag_detectado}": ${total:,.0f} ({count} gastos)'
+
 COMANDOS = ['/diario', '/semanal', '/mensual', '/anual']
 
 PALABRAS_CONSULTA = [
