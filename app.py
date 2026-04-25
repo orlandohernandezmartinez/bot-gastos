@@ -69,6 +69,11 @@ Devuelve SOLO un objeto JSON con estas claves:
  * Si se menciona explícitamente úsalo: 'Amex', 'Revolut', 'Nu', 'Stori', 'BBVA'
   Ejemplos: 'cash', 'chash', 'efectivo' → 'efectivo'; 'nu', 'nubank' → 'Nu'; 
   'revolut' → 'Revolut'; 'bbva' → 'BBVA'; 'credito' → 'crédito'
+- tag: si hay una coma "," en el mensaje, todo lo que viene DESPUÉS de la coma es el tag. 
+  Ejemplos:
+  "110 comida con melisa, viaje paris" → tag: "viaje paris"
+  "230 drinks tonal, viaje oaxaca" → tag: "viaje oaxaca"
+  "85 tacos" → tag: "" (sin coma = sin tag, devuelve string vacío)
 
 Texto: {texto}"""
 
@@ -77,7 +82,7 @@ Texto: {texto}"""
         headers={'Authorization': f'Bearer {OPENAI_KEY}'},
         json={
             'model': 'gpt-4o-mini',
-            'max_tokens': 200,
+            'max_tokens': 300,
             'messages': [
                 {'role': 'system', 'content': 'Devuelve SOLO JSON válido, sin markdown ni backticks.'},
                 {'role': 'user', 'content': prompt}
@@ -329,9 +334,7 @@ def webhook():
         # Consultas en lenguaje natural
         texto_norm = normalizar(texto)
         if any(p in texto_norm for p in PALABRAS_CONSULTA):
-            resultado = consulta_banco(texto)
-            if not resultado:
-                resultado = consulta_categoria(texto)
+            resultado = consulta_tag(texto) or consulta_banco(texto) or consulta_categoria(texto)
             if resultado:
                 send_message(chat_id, resultado)
                 return 'ok'
