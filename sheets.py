@@ -18,7 +18,7 @@ def append_row(fecha, monto, concepto, categoria, banco, tag=''):
     service = get_service()
     service.spreadsheets().values().append(
         spreadsheetId=SHEET_ID,
-        range="'Hoja 1'!A:F",
+        range="'Hoja1'!A:F",
         valueInputOption='RAW',
         body={'values': [[fecha, monto, concepto, categoria, banco, tag]]}
     ).execute()
@@ -27,7 +27,7 @@ def get_all_rows():
     service = get_service()
     result = service.spreadsheets().values().get(
         spreadsheetId=SHEET_ID,
-        range='Hoja1!A:E'
+        range='Hoja1!A:F'
     ).execute()
     rows = result.get('values', [])
     if len(rows) < 2:
