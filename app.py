@@ -8,6 +8,12 @@ from sheets import append_row, get_all_rows
 
 import unicodedata
 
+MX_TZ = ZoneInfo("America/Mexico_City")
+
+def fecha_hora_telegram_dt(message):
+    timestamp = message.get('date')
+    return datetime.fromtimestamp(timestamp, tz=MX_TZ)
+
 def normalizar(texto):
     texto = texto.lower().strip()
     texto = unicodedata.normalize('NFD', texto)
