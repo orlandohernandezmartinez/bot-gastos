@@ -1,18 +1,16 @@
 import os
 import json
 import requests
-from datetime import datetime, timedelta
+
 from flask import Flask, request
 from dotenv import load_dotenv
 from sheets import append_row, get_all_rows
 
 import unicodedata
 
-MX_TZ = ZoneInfo("America/Mexico_City")
+from datetime import datetime, timedelta, timezone
 
-def fecha_hora_telegram_dt(message):
-    timestamp = message.get('date')
-    return datetime.fromtimestamp(timestamp, tz=MX_TZ)
+MX_TZ = timezone(timedelta(hours=-6))
 
 def normalizar(texto):
     texto = texto.lower().strip()
@@ -41,7 +39,7 @@ def send_message(chat_id, text):
     print(f"[SEND] Respuesta Telegram: {r.status_code} {r.text[:100]}")
 
 def extract_gasto(texto):
-    hoy = datetime.now().strftime('%Y-%m-%d')
+    hoy = datetime.now(MX_TZ).strftime('%Y-%m-%d')
     print(f"[OPENAI] Extrayendo gasto de: {texto}")
 
     prompt = f"""Extrae el gasto del siguiente texto.
@@ -104,7 +102,7 @@ def calcular_resumen(comando):
     print(f"[RESUMEN] Calculando: {comando}")
     filas = get_all_rows()
     print(f"[RESUMEN] Filas obtenidas: {len(filas)}")
-    ahora = datetime.now()
+    ahora = datetime.now(MX_TZ)
     hoy = ahora.strftime('%Y-%m-%d')
     hace7 = ahora - timedelta(days=7)
 
@@ -131,7 +129,7 @@ def calcular_resumen(comando):
 
 def consulta_categoria(texto):
     """Detecta preguntas sobre categorías específicas y calcula el total"""
-    hoy = datetime.now()
+    hoy = datetime.now(MX_TZ)
     texto_lower = normalizar(texto)  
 
     # Detectar periodo
@@ -216,7 +214,7 @@ def consulta_banco(texto):
     es_deuda = any(p in texto_norm for p in ['debo', 'deuda', 'deber', 'credito', 'crédito', 'adeudo'])
 
     # Detectar periodo — default mes si no se especifica
-    hoy = datetime.now()
+    hoy = datetime.now(MX_TZ)
     if 'hoy' in texto_norm:
         periodo = 'hoy'
         etiqueta_periodo = 'hoy'
