@@ -62,9 +62,9 @@ Devuelve SOLO un objeto JSON con estas claves:
   * 'salud' → médico, farmacia, doctor, gym
   * 'hogar' → renta, luz, agua, internet, muebles
   * 'ropa' → ropa, zapatos, tenis, accesorios
-  * 'hormiga' → oxxo, seven eleven, chatarra, snacks
+  * 'hormiga' → oxxo, seven, 7 eleven, chatarra, snacks
   * 'educacion' → cursos, libros, clases
-  * 'trabajo' → claude, chatgpt, google workspace, software, celular, telcel, suscripciones de trabajo
+  * 'trabajo' → claude, chatgpt, digital ocean, google workspace, software, celular, telcel, suscripciones de trabajo
   * 'credito' → pago de tarjeta de crédito, liquidación de deuda
   * 'gustito' → gastos personales de placer: perfume, revelado de rollo, caprichos
   * 'servicios' → lavandería, servicios domésticos, luz, agua, gas, internet
@@ -149,7 +149,7 @@ def consulta_categoria(texto):
     # Detectar categoría mencionada
     categorias_map = {
         'cafe': ['café', 'cafe', 'coffee', 'flatwhite'],
-        'pan': ['pan', 'panadería', 'panaderia', 'dona', 'donas', 'krispy'],
+        'pan': ['pan', 'panadería', 'panaderia', 'dona', 'donas', 'krispy', 'chocolatin'],
         'comida': ['comida', 'comer', 'restaurante', 'food'],
         'bebida': ['drinks', 'chelas', 'cervezas', 'cocteles', 'coctel', 'cocktail', 'martini', 'negroni', 'mezcal', 'mezcales', 'agua', 'suero', 'electrolit'],
         'transporte': ['transporte', 'uber', 'taxi', 'gasolina'],
@@ -159,7 +159,7 @@ def consulta_categoria(texto):
         'ropa': ['ropa', 'ropa', 'vestimenta'],
         'hormiga': ['oxxo', 'seven', 'chatarra'],
         'educacion': ['educacion', 'educación', 'curso', 'clase'],
-        'trabajo': ['claude', 'chatgpt', 'chat', 'gpt', 'google'],
+        'trabajo': ['claude', 'chatgpt', 'chat', 'gpt', 'google', 'digital ocean'],
         'otro': ['otro']
     }
 
