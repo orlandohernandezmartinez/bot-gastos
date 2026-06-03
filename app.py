@@ -60,13 +60,12 @@ Devuelve SOLO un objeto JSON con estas claves:
   * 'transporte' → uber, taxi, gasolina, vuelos, metro
   * 'entretenimiento' → cine, netflix, spotify, conciertos, fiestas, eventos
   * 'salud' → médico, farmacia, doctor, gym
-  * 'hogar' → renta, luz, agua, internet, muebles
-  * 'ropa' → ropa, zapatos, tenis, accesorios
+  * 'swag' → ropa, zapatos, tenis, accesorios
   * 'hormiga' → oxxo, seven, 7 eleven, chatarra, snacks
   * 'educacion' → cursos, libros, clases
   * 'trabajo' → claude, chatgpt, digital ocean, google workspace, software, celular, telcel, suscripciones de trabajo
   * 'credito' → pago de tarjeta de crédito, liquidación de deuda
-  * 'gustito' → gastos personales de placer: perfume, revelado de rollo, caprichos
+  * 'gustito' → gastos personales de placer: perfume, revelado de rollo, caprichos, amazon
   * 'servicios' → lavandería, servicios domésticos, luz, agua, gas, internet
   * 'otro' → cualquier cosa que no encaje arriba
 - banco: la fuente de fondos mencionada. Si no se menciona usa 'efectivo'. 
@@ -155,11 +154,12 @@ def consulta_categoria(texto):
         'transporte': ['transporte', 'uber', 'taxi', 'gasolina'],
         'entretenimiento': ['entretenimiento', 'ocio', 'diversión', 'diversion'],
         'salud': ['salud', 'médico', 'medico', 'farmacia'],
-        'hogar': ['hogar', 'casa', 'renta'],
-        'ropa': ['ropa', 'ropa', 'vestimenta'],
+        'swag': ['ropa', 'vestimenta'],
         'hormiga': ['oxxo', 'seven', 'chatarra'],
+        'servicios': ['lavandería', 'servicios', 'luz', 'agua', 'gas', 'internet'],
         'educacion': ['educacion', 'educación', 'curso', 'clase'],
         'trabajo': ['claude', 'chatgpt', 'chat', 'gpt', 'google', 'digital ocean'],
+        'gustito': ['gastos', 'perfume', 'revelado rollo', 'caprichos', 'amazon'],
         'otro': ['otro']
     }
 
