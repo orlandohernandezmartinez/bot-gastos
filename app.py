@@ -61,6 +61,7 @@ Devuelve SOLO un objeto JSON con estas claves:
   * 'entretenimiento' → cine, netflix, spotify, conciertos, fiestas, eventos
   * 'salud' → médico, farmacia, doctor, gym
   * 'swag' → ropa, zapatos, tenis, accesorios
+  * 'hospedaje' → hotel, hostel, hostal, airbnb, renta, hospedaje
   * 'hormiga' → oxxo, seven, 7 eleven, chatarra, snacks
   * 'educacion' → cursos, libros, clases
   * 'trabajo' → claude, chatgpt, digital ocean, google workspace, software, celular, telcel, suscripciones de trabajo
@@ -152,6 +153,7 @@ def consulta_categoria(texto):
         'comida': ['comida', 'comer', 'restaurante', 'food'],
         'bebida': ['drinks', 'chelas', 'cervezas', 'cocteles', 'coctel', 'cocktail', 'martini', 'negroni', 'mezcal', 'mezcales', 'agua', 'suero', 'electrolit'],
         'transporte': ['transporte', 'uber', 'taxi', 'gasolina'],
+        'hospedaje': ['hotel', 'hostel', 'hostal', 'airbnb', 'renta', 'hospedaje'],
         'entretenimiento': ['entretenimiento', 'ocio', 'diversión', 'diversion'],
         'salud': ['salud', 'médico', 'medico', 'farmacia'],
         'swag': ['ropa', 'vestimenta'],
