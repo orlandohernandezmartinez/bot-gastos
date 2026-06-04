@@ -58,7 +58,7 @@ Devuelve SOLO un objeto JSON con estas claves:
   * 'comida' → restaurantes, tacos, super, aguacates, comida en general
   * 'bebida' → drinks, cervezas, chelas, cocteles, martini, negroni, mezcal, mezcales, agua, suero, electrolit, cocktail
   * 'transporte' → uber, taxi, gasolina, vuelos, metro
-  * 'entretenimiento' → cine, netflix, spotify, conciertos, fiestas, eventos, brawl stars
+  * 'entretenimiento' → cine, netflix, spotify, conciertos, fiestas, eventos, brawl stars, itunes, apple
   * 'salud' → médico, farmacia, doctor, gym
   * 'swag' → ropa, zapatos, tenis, accesorios
   * 'hospedaje' → hotel, hostel, hostal, airbnb, renta, hospedaje
@@ -154,7 +154,7 @@ def consulta_categoria(texto):
         'bebida': ['drinks', 'chelas', 'cervezas', 'cocteles', 'coctel', 'cocktail', 'martini', 'negroni', 'mezcal', 'mezcales', 'agua', 'suero', 'electrolit'],
         'transporte': ['transporte', 'uber', 'taxi', 'gasolina'],
         'hospedaje': ['hotel', 'hostel', 'hostal', 'airbnb', 'renta', 'hospedaje'],
-        'entretenimiento': ['entretenimiento', 'ocio', 'diversión', 'diversion', 'brawl stars'],
+        'entretenimiento': ['entretenimiento', 'ocio', 'diversión', 'diversion', 'brawl stars', 'itunes', 'apple', 'youtube', 'cine'],
         'salud': ['salud', 'médico', 'medico', 'farmacia'],
         'swag': ['ropa', 'vestimenta'],
         'hormiga': ['oxxo', 'seven', 'chatarra'],
