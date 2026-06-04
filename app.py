@@ -64,7 +64,7 @@ Devuelve SOLO un objeto JSON con estas claves:
   * 'hospedaje' → hotel, hostel, hostal, airbnb, renta, hospedaje
   * 'hormiga' → oxxo, seven, 7 eleven, chatarra, snacks
   * 'educacion' → cursos, libros, clases
-  * 'trabajo' → claude, chatgpt, digital ocean, adobe suite, google workspace, software, celular, telcel, servidor, server, railway
+  * 'trabajo' → claude, chatgpt, digital ocean, adobe suite, google workspace, software, celular, telcel, servidor, server, railway, icloud
   * 'credito' → pago de tarjeta de crédito, liquidación de deuda
   * 'gustito' → gastos personales de placer: perfume, revelado de rollo, caprichos, amazon
   * 'servicios' → lavandería, servicios domésticos, luz, agua, gas, internet
@@ -160,7 +160,7 @@ def consulta_categoria(texto):
         'hormiga': ['oxxo', 'seven', 'chatarra'],
         'servicios': ['lavandería', 'servicios', 'luz', 'agua', 'gas', 'internet'],
         'educacion': ['educacion', 'educación', 'curso', 'clase'],
-        'trabajo': ['claude', 'adobe', 'chatgpt', 'chat', 'gpt', 'google', 'digital ocean', 'servidor', 'server', 'railway'],
+        'trabajo': ['claude', 'adobe', 'chatgpt', 'chat', 'gpt', 'google', 'digital ocean', 'servidor', 'server', 'railway', 'icloud'],
         'gustito': ['gastos', 'perfume', 'revelado rollo', 'caprichos', 'amazon'],
         'otro': ['otro']
     }
