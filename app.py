@@ -69,7 +69,7 @@ Devuelve SOLO un objeto JSON con estas claves:
   * 'gustito' → gastos personales de placer: perfume, revelado de rollo, caprichos, amazon
   * 'servicios' → lavandería, servicios domésticos, luz, agua, gas, internet
   * 'otro' → cualquier cosa que no encaje arriba
-- banco: la fuente de fondos mencionada. Si no se menciona usa 'efectivo'. 
+- banco: la fuente de fondos mencionada. Si no se menciona usa 'revolut'. 
  * Si se menciona explícitamente úsalo: 'Amex', 'Revolut', 'Nu', 'Stori', 'BBVA'
   Ejemplos: 'cash', 'chash', 'efectivo' → 'efectivo'; 'nu', 'nubank' → 'Nu'; 
   'revolut' → 'Revolut'; 'bbva' → 'BBVA'; 'credito' → 'crédito'
